@@ -1,103 +1,188 @@
-import Image from "next/image";
+"use client";
 
-export default function Home() {
-  return (
-    <div className="grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20 font-[family-name:var(--font-geist-sans)]">
-      <main className="flex flex-col gap-[32px] row-start-2 items-center sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={180}
-          height={38}
-          priority
-        />
-        <ol className="list-inside list-decimal text-sm/6 text-center sm:text-left font-[family-name:var(--font-geist-mono)]">
-          <li className="mb-2 tracking-[-.01em]">
-            Get started by editing{" "}
-            <code className="bg-black/[.05] dark:bg-white/[.06] px-1 py-0.5 rounded font-[family-name:var(--font-geist-mono)] font-semibold">
-              app/page.tsx
-            </code>
-            .
-          </li>
-          <li className="tracking-[-.01em]">
-            Save and see your changes instantly.
-          </li>
-        </ol>
+import { PlusCircle, Tag, Loader2 } from "lucide-react";
+import Link from "next/link";
+import { useEffect, useState, useCallback } from "react";
 
-        <div className="flex gap-4 items-center flex-col sm:flex-row">
-          <a
-            className="rounded-full border border-solid border-transparent transition-colors flex items-center justify-center bg-foreground text-background gap-2 hover:bg-[#383838] dark:hover:bg-[#ccc] font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 sm:w-auto"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={20}
-              height={20}
-            />
-            Deploy now
-          </a>
-          <a
-            className="rounded-full border border-solid border-black/[.08] dark:border-white/[.145] transition-colors flex items-center justify-center hover:bg-[#f2f2f2] dark:hover:bg-[#1a1a1a] hover:border-transparent font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 w-full sm:w-auto md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Read our docs
-          </a>
+import { PromptMasonry } from "@/components/prompts/PromptMasonry";
+import { Button } from "@/components/ui/button";
+
+import type { Prisma } from "@prisma/client";
+
+// 定义包含关联数据的类型
+type PromptWithTags = Prisma.PromptGetPayload<{
+  include: { tags: { include: { tag: true } } };
+}>;
+
+interface ApiResponse {
+  prompts: PromptWithTags[];
+  hasMore: boolean;
+  totalCount: number;
+  currentPage: number;
+}
+
+export default function HomePage() {
+    const [prompts, setPrompts] = useState<PromptWithTags[]>([]);
+    const [availableTags, setAvailableTags] = useState<{ id: string; name: string }[]>([]);
+    const [loading, setLoading] = useState(true);
+    const [loadingMore, setLoadingMore] = useState(false);
+    const [hasMore, setHasMore] = useState(true);
+    const [currentPage, setCurrentPage] = useState(1);
+
+    // 获取提示词数据
+    const fetchPrompts = useCallback(async (page: number, isLoadMore = false) => {
+        try {
+            if (isLoadMore) {
+                setLoadingMore(true);
+            } else {
+                setLoading(true);
+            }
+
+            const response = await fetch(`/api/prompts?page=${page}&limit=20`);
+            if (!response.ok) {
+                throw new Error("Failed to fetch prompts");
+            }
+
+            const data: ApiResponse = await response.json();
+
+            if (isLoadMore) {
+                setPrompts(prev => {
+                    // 使用 Map 来去重，确保不会有重复的 prompt
+                    const promptMap = new Map();
+                    
+                    // 先添加现有的 prompts
+                    prev.forEach(prompt => {
+                        promptMap.set(prompt.id, prompt);
+                    });
+                    
+                    // 再添加新的 prompts（如果有重复的 ID，新的会覆盖旧的）
+                    data.prompts.forEach(prompt => {
+                        promptMap.set(prompt.id, prompt);
+                    });
+                    
+                    return Array.from(promptMap.values());
+                });
+            } else {
+                setPrompts(data.prompts);
+            }
+
+            setHasMore(data.hasMore);
+            setCurrentPage(data.currentPage);
+        } catch (error) {
+            console.error("Error fetching prompts:", error);
+        } finally {
+            setLoading(false);
+            setLoadingMore(false);
+        }
+    }, []);
+
+    // 获取标签数据
+    const fetchTags = useCallback(async () => {
+        try {
+            const response = await fetch('/api/tags');
+            if (!response.ok) {
+                throw new Error("Failed to fetch tags");
+            }
+            const tags = await response.json();
+            setAvailableTags(tags);
+        } catch (error) {
+            console.error("Error fetching tags:", error);
+        }
+    }, []);
+
+    // 初始加载
+    useEffect(() => {
+        fetchPrompts(1);
+        fetchTags();
+    }, [fetchPrompts, fetchTags]);
+
+    // 滚动监听
+    useEffect(() => {
+        const handleScroll = () => {
+            if (loadingMore || !hasMore) return;
+
+            const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+            const windowHeight = window.innerHeight;
+            const documentHeight = document.documentElement.scrollHeight;
+
+            // 当滚动到距离底部100px时开始加载更多
+            if (scrollTop + windowHeight >= documentHeight - 100) {
+                fetchPrompts(currentPage + 1, true);
+            }
+        };
+
+        window.addEventListener("scroll", handleScroll);
+        return () => window.removeEventListener("scroll", handleScroll);
+    }, [loadingMore, hasMore, currentPage, fetchPrompts]);
+
+    if (loading) {
+        return (
+            <div className="container py-8 max-w-4xl mx-auto">
+                <div className="flex justify-between items-center mb-8">
+                    <h1 className="text-3xl font-bold">提示词库</h1>
+                    <Button asChild>
+                        <Link href="/manage/tags">
+                            <Tag className="w-4 h-4 mr-2" />
+                            标签管理
+                        </Link>
+                    </Button>
+                </div>
+                <div className="flex justify-center items-center py-16">
+                    <Loader2 className="w-8 h-8 animate-spin" />
+                    <span className="ml-2 text-muted-foreground">加载中...</span>
+                </div>
+            </div>
+        );
+    }
+
+    return (
+        <div className="container py-8 max-w-4xl mx-auto">
+            <div className="flex justify-between items-center mb-8">
+                <h1 className="text-3xl font-bold">提示词库</h1>
+                <Button asChild>
+                    <Link href="/manage/tags">
+                        <Tag className="w-4 h-4 mr-2" />
+            标签管理
+                    </Link>
+                </Button>
+            </div>
+
+            {prompts.length === 0 ? (
+                <div className="text-center py-16 border-2 border-dashed rounded-lg">
+                    <h2 className="text-xl font-semibold text-muted-foreground">暂无提示词</h2>
+                    <p className="text-muted-foreground mt-2 mb-4">开始创建你的第一个提示词资产吧！</p>
+                    <Button asChild>
+                        <Link href="/prompts/new">
+                            <PlusCircle className="w-4 h-4 mr-2" />
+                            立即创建
+                        </Link>
+                    </Button>
+                </div>
+            ) : (
+                <>
+                    <PromptMasonry 
+                        prompts={prompts} 
+                        columns={3} 
+                        availableTags={availableTags} 
+                        onRefresh={() => fetchPrompts(1)}
+                    />
+
+                    {/* 加载更多状态 */}
+                    {loadingMore && (
+                        <div className="flex justify-center items-center py-8">
+                            <Loader2 className="w-6 h-6 animate-spin" />
+                            <span className="ml-2 text-muted-foreground">加载更多...</span>
+                        </div>
+                    )}
+
+                    {/* 没有更多数据提示 */}
+                    {!hasMore && prompts.length > 0 && (
+                        <div className="text-center py-8">
+                            <p className="text-muted-foreground">没有更多的提示词了！</p>
+                        </div>
+                    )}
+                </>
+            )}
         </div>
-      </main>
-      <footer className="row-start-3 flex gap-[24px] flex-wrap items-center justify-center">
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/file.svg"
-            alt="File icon"
-            width={16}
-            height={16}
-          />
-          Learn
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/window.svg"
-            alt="Window icon"
-            width={16}
-            height={16}
-          />
-          Examples
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/globe.svg"
-            alt="Globe icon"
-            width={16}
-            height={16}
-          />
-          Go to nextjs.org →
-        </a>
-      </footer>
-    </div>
-  );
+    );
 }

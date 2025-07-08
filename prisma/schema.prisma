@@ -1,0 +1,54 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+// 指定客户端生成器
+generator client {
+  provider = "prisma-client-js" // 生成 JavaScript/TypeScript 客户端
+}
+
+// 指定数据源
+datasource db {
+  provider = "postgresql"        // 使用的数据库
+  url      = env("DATABASE_URL") // 从 .env 文件读取连接字符串
+}
+
+model Prompt {
+  id          String   @id @default(cuid())
+  title       String
+  content     String
+  description String?
+  version     String   @default("1.0.0")
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  tags        PromptTag[] // 一份提示词可以关联多个标签，建议多对多关系
+}
+
+model Tag {
+  id        String   @id @default(cuid())
+  name      String   @unique
+  type      TagType  @default(PUBLIC)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  prompts   PromptTag[] // 一个标签可以关联多份提示词，建议多对多关系
+}
+
+// Explicit many-to-many join table
+model PromptTag {
+  promptId  String
+  tagId     String
+  assignedAt DateTime @default(now())
+  assignedBy String? // Optional: track who assigned the tag
+
+  prompt    Prompt @relation(fields: [promptId], references: [id], onDelete: Cascade)
+  tag       Tag    @relation(fields: [tagId], references: [id], onDelete: Cascade)
+
+  @@id([promptId, tagId])
+}
+
+enum TagType {
+  PUBLIC
+  PRIVATE
+}
