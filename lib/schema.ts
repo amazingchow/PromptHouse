@@ -6,7 +6,8 @@ export const NewPromptSchema = z.object({
     content: z.string().min(10, { message: '提示词内容至少需要10个字符' }),
     description: z.string().optional(),
     version: z.string().regex(/^\d+\.\d+\.\d+$/, { message: '版本号格式不正确, 例如: 1.0.0' }).optional().default('1.0.0'),
-    tags: z.array(z.string()).min(1, { message: '请至少选择一个标签' })
+    tags: z.array(z.string()),
+    isPublic: z.boolean().default(true)
 });
 
 export const CreateTagSchema = z.object({

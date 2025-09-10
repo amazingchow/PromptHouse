@@ -55,17 +55,14 @@ export function PromptCard({ prompt, availableTags = [], onRefresh }: PromptCard
                         ))}
                     </div>
                 </CardContent>
-                <CardFooter className="flex justify-between items-center">
-                    <p className="text-xs text-muted-foreground">
-                        创建于: {new Date(prompt.createdAt).toLocaleDateString()}
-                    </p>
-                    <div className="flex gap-2">
+                <CardFooter className="flex justify-end items-center">
+                    <div className="flex gap-1">
                         <Button 
                             size="sm" 
                             variant="ghost" 
                             onClick={() => setIsViewDialogOpen(true)}
                         >
-                            <Eye className="w-4 h-4 mr-1" />
+                            <Eye className="w-3 h-3" />
                             查看
                         </Button>
                         <Button 
@@ -73,7 +70,7 @@ export function PromptCard({ prompt, availableTags = [], onRefresh }: PromptCard
                             variant="ghost" 
                             onClick={() => setIsEditDialogOpen(true)}
                         >
-                            <Pencil className="w-4 h-4 mr-1" />
+                            <Pencil className="w-3 h-3" />
                             编辑
                         </Button>
                         <Button 
@@ -82,7 +79,7 @@ export function PromptCard({ prompt, availableTags = [], onRefresh }: PromptCard
                             onClick={() => setIsDeleteDialogOpen(true)}
                             // className="text-destructive hover:text-destructive hover:bg-destructive/10"
                         >
-                            <Trash2 className="w-4 h-4 mr-1" />
+                            <Trash2 className="w-3 h-3" />
                             删除
                         </Button>
                     </div>

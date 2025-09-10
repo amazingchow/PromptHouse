@@ -1,11 +1,12 @@
 "use client";
 
-import { PlusCircle, Tag, Loader2 } from "lucide-react";
+import { PlusCircle, Tag, Loader2, Search } from "lucide-react";
 import Link from "next/link";
-import { useEffect, useState, useCallback } from "react";
+import { useEffect, useState, useCallback, useRef } from "react";
 
 import { PromptMasonry } from "@/components/prompts/PromptMasonry";
 import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
 
 import type { Prisma } from "@prisma/client";
 
@@ -28,9 +29,12 @@ export default function HomePage() {
     const [loadingMore, setLoadingMore] = useState(false);
     const [hasMore, setHasMore] = useState(true);
     const [currentPage, setCurrentPage] = useState(1);
+    const [inputValue, setInputValue] = useState("");
+    const [searchTerm, setSearchTerm] = useState("");
+    const isSearching = useRef(false);
 
     // 获取提示词数据
-    const fetchPrompts = useCallback(async (page: number, isLoadMore = false) => {
+    const fetchPrompts = useCallback(async (page: number, search: string = "", isLoadMore = false) => {
         try {
             if (isLoadMore) {
                 setLoadingMore(true);
@@ -38,7 +42,8 @@ export default function HomePage() {
                 setLoading(true);
             }
 
-            const response = await fetch(`/api/prompts?page=${page}&limit=20`);
+            const searchQuery = search ? `&search=${encodeURIComponent(search)}` : "";
+            const response = await fetch(`/api/prompts?page=${page}&limit=20${searchQuery}`);
             if (!response.ok) {
                 throw new Error("Failed to fetch prompts");
             }
@@ -92,7 +97,7 @@ export default function HomePage() {
 
     // 初始加载
     useEffect(() => {
-        fetchPrompts(1);
+        fetchPrompts(1, "");
         fetchTags();
     }, [fetchPrompts, fetchTags]);
 
@@ -107,25 +112,19 @@ export default function HomePage() {
 
             // 当滚动到距离底部100px时开始加载更多
             if (scrollTop + windowHeight >= documentHeight - 100) {
-                fetchPrompts(currentPage + 1, true);
+                fetchPrompts(currentPage + 1, searchTerm, true);
             }
         };
 
         window.addEventListener("scroll", handleScroll);
         return () => window.removeEventListener("scroll", handleScroll);
-    }, [loadingMore, hasMore, currentPage, fetchPrompts]);
+    }, [loadingMore, hasMore, currentPage, fetchPrompts, searchTerm]);
 
     if (loading) {
         return (
             <div className="container py-8 max-w-4xl mx-auto">
                 <div className="flex justify-between items-center mb-8">
                     <h1 className="text-3xl font-bold">提示词库</h1>
-                    <Button asChild>
-                        <Link href="/manage/tags">
-                            <Tag className="w-4 h-4 mr-2" />
-                            标签管理
-                        </Link>
-                    </Button>
                 </div>
                 <div className="flex justify-center items-center py-16">
                     <Loader2 className="w-8 h-8 animate-spin" />
@@ -137,14 +136,33 @@ export default function HomePage() {
 
     return (
         <div className="container py-8 max-w-4xl mx-auto">
-            <div className="flex justify-between items-center mb-8">
-                <h1 className="text-3xl font-bold">提示词库</h1>
-                <Button asChild>
-                    <Link href="/manage/tags">
-                        <Tag className="w-4 h-4 mr-2" />
-            标签管理
-                    </Link>
-                </Button>
+            <div className="flex flex-col gap-4 mb-8">
+                <div className="flex justify-between items-center">
+                    <h1 className="text-3xl font-bold">提示词库</h1>
+                    <div className="relative w-2/5">
+                        <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground h-4 w-4" />
+                        <Input
+                            type="text"
+                            placeholder="搜索提示词..."
+                            value={inputValue}
+                            className="pl-10"
+                            onChange={(e) => setInputValue(e.target.value)}
+                            onKeyDown={(e) => {
+                                if (e.key === 'Enter' && !e.shiftKey) {
+                                    e.preventDefault();
+                                    if (!isSearching.current) {
+                                        isSearching.current = true;
+                                        setSearchTerm(inputValue);
+                                        setCurrentPage(1);
+                                        fetchPrompts(1, inputValue).finally(() => {
+                                            isSearching.current = false;
+                                        });
+                                    }
+                                }
+                            }}
+                        />
+                    </div>
+                </div>
             </div>
 
             {prompts.length === 0 ? (

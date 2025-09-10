@@ -9,7 +9,7 @@ export default async function NewPromptPage() {
 
     return (
         <div className="container py-8 max-w-4xl mx-auto">
-            <h1 className="text-3xl font-bold mb-6">创建新提示词</h1>
+            <h1 className="text-3xl font-bold mb-6">创建提示词</h1>
             <NewPromptForm availableTags={tags} />
         </div>
     );

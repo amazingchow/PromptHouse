@@ -2,6 +2,8 @@
 
 import { Copy, Check } from "lucide-react";
 import { useState } from "react";
+import ReactMarkdown from "react-markdown";
+import remarkGfm from "remark-gfm";
 
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -14,12 +16,19 @@ import {
 } from "@/components/ui/dialog";
 import { Separator } from "@/components/ui/separator";
 
-import type { Prisma } from "@prisma/client";
+import type { Tag } from "@prisma/client";
 
 // 定义包含关联数据的类型
-type PromptWithTags = Prisma.PromptGetPayload<{
-  include: { tags: { include: { tag: true } } };
-}>;
+interface PromptWithTags {
+  id: string;
+  title: string;
+  description: string | null;
+  content: string;
+  version: string;
+  createdAt: Date;
+  updatedAt: Date;
+  tags: { tag: Tag }[];
+};
 
 interface PromptViewDialogProps {
   prompt: PromptWithTags;
@@ -49,9 +58,20 @@ export function PromptViewDialog({ prompt, open, onOpenChange }: PromptViewDialo
                         <Badge variant="outline">{prompt.version}</Badge>
                     </div>
                     {prompt.description && (
-                        <DialogDescription className="text-base">
-                            {prompt.description}
-                        </DialogDescription>
+                        <div className="mt-2 text-muted-foreground">
+                            <div className="prose dark:prose-invert prose-sm max-w-none [&>p:first-child]:mt-0 [&_p]:whitespace-pre-wrap [&_ol]:list-decimal [&_ul]:list-disc">
+                                <ReactMarkdown
+                                    remarkPlugins={[remarkGfm]}
+                                    components={{
+                                        p: ({ children }) => <p className="whitespace-pre-wrap">{children}</p>,
+                                        ol: ({ children }) => <ol className="list-decimal pl-4">{children}</ol>,
+                                        ul: ({ children }) => <ul className="list-disc pl-4">{children}</ul>,
+                                    }}
+                                >
+                                    {prompt.description}
+                                </ReactMarkdown>
+                            </div>
+                        </div>
                     )}
                 </DialogHeader>
                 
@@ -105,14 +125,14 @@ export function PromptViewDialog({ prompt, open, onOpenChange }: PromptViewDialo
                     <Separator />
                     
                     {/* 元数据 */}
-                    <div className="grid grid-cols-2 gap-4 text-sm text-muted-foreground">
-                        <div>
+                    <div className="grid grid-cols-2 gap-2 text-sm text-muted-foreground">
+                        <div className="flex justify-end">
                             <span className="font-medium">创建时间: </span>
-                            {new Date(prompt.createdAt).toLocaleString('zh-CN')}
+                            <span className="ml-1">{new Date(prompt.createdAt).toLocaleString('zh-CN')}</span>
                         </div>
-                        <div>
+                        <div className="flex justify-end">
                             <span className="font-medium">更新时间: </span>
-                            {new Date(prompt.updatedAt).toLocaleString('zh-CN')}
+                            <span className="ml-1">{new Date(prompt.updatedAt).toLocaleString('zh-CN')}</span>
                         </div>
                     </div>
                 </div>

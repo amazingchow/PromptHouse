@@ -15,32 +15,53 @@ datasource db {
   url      = env("DATABASE_URL") // 从 .env 文件读取连接字符串
 }
 
+// 用户模型
+model User {
+  id            String    @id @default(cuid())
+  email         String    @unique
+  name          String?
+  password      String      // 存储加密后的密码
+  prompts       Prompt[]    // 用户创建的提示词
+  tags          Tag[]       // 用户创建的标签
+  promptTags    PromptTag[] // 用户分配的标签关联
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+}
+
+// 提示词模型
 model Prompt {
   id          String   @id @default(cuid())
   title       String
   content     String
   description String?
   version     String   @default("1.0.0")
+  tags        PromptTag[]                                                                  // 一份提示词可以关联多个标签
+  creatorId   String                                                                       // 创建者ID
+  creator     User     @relation(fields: [creatorId], references: [id], onDelete: Cascade) // 创建者
+  isPublic    Boolean  @default(true)                                                      // 是否公开
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
-  tags        PromptTag[] // 一份提示词可以关联多个标签，建议多对多关系
 }
 
+// 标签模型
 model Tag {
   id        String   @id @default(cuid())
   name      String   @unique
   type      TagType  @default(PUBLIC)
+  prompts   PromptTag[]                                                                  // 一个标签可以关联多份提示词
+  creatorId String                                                                       // 创建者ID
+  creator   User     @relation(fields: [creatorId], references: [id], onDelete: Cascade) // 创建者
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
-  prompts   PromptTag[] // 一个标签可以关联多份提示词，建议多对多关系
 }
 
-// Explicit many-to-many join table
+// 多对多关联表
 model PromptTag {
-  promptId  String
-  tagId     String
+  promptId   String
+  tagId      String
   assignedAt DateTime @default(now())
-  assignedBy String? // Optional: track who assigned the tag
+  assignedBy String   // 关联到用户ID
+  assigner   User     @relation(fields: [assignedBy], references: [id])
 
   prompt    Prompt @relation(fields: [promptId], references: [id], onDelete: Cascade)
   tag       Tag    @relation(fields: [tagId], references: [id], onDelete: Cascade)

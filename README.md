@@ -60,8 +60,7 @@ PromptHouse 是一个专为 AI 提示词管理而设计的现代化 Web 应用�
 6. **种子数据** (可选)
 
    ```bash
-   npx prisma db seed_tags
-   npx prisma db seed_prompts
+   npx prisma db seed
    ```
 
 7. **启动开发服务器**

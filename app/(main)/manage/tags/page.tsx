@@ -26,7 +26,7 @@ export default async function TagManagementPage() {
             </Link>
 
             <div className="flex justify-between items-center mb-6">
-                <h1 className="text-3xl font-bold">标签管理</h1>
+                <h1 className="text-3xl font-bold">标签库</h1>
                 <CreateTagDialog>
                     <Button>新建标签</Button>
                 </CreateTagDialog>
