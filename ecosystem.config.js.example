@@ -1,0 +1,18 @@
+module.exports = {
+    apps: [
+        {
+            name: 'prompt-house',                     // 应用名称
+            script: 'npm',                            // 要执行的脚本
+            args: 'start',                            // 脚本参数
+            cwd: '/data/codebase/adamzj/PromptHouse', // 指定工作目录
+            instances: 'max',                         // 启动最大可用 CPU 核心数的实例（实现负载均衡）
+            exec_mode: 'cluster',                     // 集群模式
+            env: {
+                NODE_ENV: 'production',
+                DATABASE_URL: 'postgresql://prompthouse:prompthouse_admin_123456@localhost:5432/prompthouse?schema=public',
+                NEXT_AUTH_SECRET: 'XXX',
+                PORT: 3000,
+            },
+        },
+    ],
+};
