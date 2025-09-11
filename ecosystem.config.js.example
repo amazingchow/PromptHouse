@@ -26,7 +26,7 @@ module.exports = {
             // --- 环境变量 ---
             env: {
                 NODE_ENV: 'production', // 必须设置为 'production'
-                PORT: 3000, // 指定应用监听的端口
+                PORT: 3001, // 指定应用监听的端口
                 // --- 在这里添加你所有的生产环境变量 ---
                 NODE_ENV: 'production',
                 DATABASE_URL: 'postgresql://prompthouse:prompthouse_admin_123456@localhost:5432/prompthouse?schema=public',

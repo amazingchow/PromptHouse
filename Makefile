@@ -18,15 +18,3 @@ run_locally: ### Run the app locally.
 .PHONY: build
 build: ### Build the app.
 	@(npm run build)
-
-.PHONY: run
-run: build ### Run the app using pm2.
-	@(pm2 start ecosystem.config.js)
-
-.PHONY: rerun
-re: build ### Re-run the app using pm2.
-	@(pm2 restart prompt-house)
-
-.PHONY: stop
-stop: ### Stop the app using pm2.
-	@(pm2 stop prompt-house)
