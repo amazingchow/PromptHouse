@@ -31,7 +31,7 @@ module.exports = {
                 NODE_ENV: 'production',
                 DATABASE_URL: 'postgresql://prompthouse:prompthouse_admin_123456@localhost:5432/prompthouse?schema=public',
                 AUTH_SECRET: 'XXX',
-                NEXTAUTH_SECRET: 'https://prompthouse.gocoding.cloud',
+                NEXTAUTH_URL: 'https://prompthouse.gocoding.cloud',
             },
         },
     ],
