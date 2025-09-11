@@ -30,7 +30,7 @@ module.exports = {
                 // --- 在这里添加你所有的生产环境变量 ---
                 NODE_ENV: 'production',
                 DATABASE_URL: 'postgresql://prompthouse:prompthouse_admin_123456@localhost:5432/prompthouse?schema=public',
-                NEXT_AUTH_SECRET: 'XXX',
+                AUTH_SECRET: 'XXX',
             },
         },
     ],
