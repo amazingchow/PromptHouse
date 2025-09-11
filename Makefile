@@ -17,7 +17,6 @@ run_locally: ### Run the app locally.
 
 .PHONY: build
 build: ### Build the app.
-	@(npm install --production)
 	@(npm run build)
 
 .PHONY: run

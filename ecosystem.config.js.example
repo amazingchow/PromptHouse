@@ -5,8 +5,11 @@ module.exports = {
             script: 'npm',                            // 要执行的脚本
             args: 'start',                            // 脚本参数
             cwd: '/data/codebase/adamzj/PromptHouse', // 指定工作目录
-            instances: 'max',                         // 启动最大可用 CPU 核心数的实例（实现负载均衡）
+            exec_mode: 'fork'                         // 指定为 fork 模式
+            instances: 1,                             // 启动最大可用 CPU 核心数的实例（实现负载均衡）
             exec_mode: 'cluster',                     // 集群模式
+            watch: false,                             // 生产环境通常不开启 watch
+            max_memory_restart: '2G',                 // 内存超过 2G 后自动重启
             env: {
                 NODE_ENV: 'production',
                 DATABASE_URL: 'postgresql://prompthouse:prompthouse_admin_123456@localhost:5432/prompthouse?schema=public',
