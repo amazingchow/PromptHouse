@@ -1,13 +1,16 @@
 'use client';
 
-import { useCallback, useEffect, useRef, useState } from 'react';
-import Link from 'next/link';
-import type { Prisma } from '@prisma/client';
 import { Loader2, PlusCircle, Search, Tag } from 'lucide-react';
+import Link from 'next/link';
+import { useCallback, useEffect, useRef, useState } from 'react';
 
+import { PromptMasonry } from '@/components/prompts/PromptMasonry';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { PromptMasonry } from '@/components/prompts/PromptMasonry';
+
+import type { Prisma } from '@prisma/client';
+
+
 
 // 定义包含关联数据的类型
 type PromptWithTags = Prisma.PromptGetPayload<{

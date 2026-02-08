@@ -1,8 +1,7 @@
 'use client';
 
-import { useState } from 'react';
-import type { Tag } from '@prisma/client';
 import { Check, Copy } from 'lucide-react';
+import { useState } from 'react';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
 
@@ -10,6 +9,8 @@ import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { Separator } from '@/components/ui/separator';
+
+import type { Tag } from '@prisma/client';
 
 // 定义包含关联数据的类型
 interface PromptWithTags {

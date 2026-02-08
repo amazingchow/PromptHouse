@@ -1,9 +1,11 @@
 'use client';
 
 import { useCallback, useEffect, useState } from 'react';
-import type { Prisma } from '@prisma/client';
 
 import { PromptCard } from '@/components/prompts/PromptCard';
+
+import type { Prisma } from '@prisma/client';
+
 
 // 定义包含关联数据的类型
 type PromptWithTags = Prisma.PromptGetPayload<{

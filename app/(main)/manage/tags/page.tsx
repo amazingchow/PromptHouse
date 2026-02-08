@@ -1,12 +1,12 @@
-import Link from 'next/link';
 import { TagType } from '@prisma/client';
 import { ArrowLeft } from 'lucide-react';
+import Link from 'next/link';
 
-import prisma from '@/lib/prisma';
+import { CreateTagDialog } from '@/components/forms/CreateTagDialog';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { CreateTagDialog } from '@/components/forms/CreateTagDialog';
+import prisma from '@/lib/prisma';
 
 async function getTags() {
   const allTags = await prisma.tag.findMany({ orderBy: { name: 'asc' } });

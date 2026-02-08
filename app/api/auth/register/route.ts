@@ -1,5 +1,5 @@
-import { NextResponse } from 'next/server';
 import { hash } from 'bcryptjs';
+import { NextResponse } from 'next/server';
 
 import prisma from '@/lib/prisma';
 

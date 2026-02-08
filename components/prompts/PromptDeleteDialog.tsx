@@ -1,10 +1,8 @@
 'use client';
 
-import { useTransition } from 'react';
-import type { Prisma } from '@prisma/client';
 import { AlertTriangle, Trash2 } from 'lucide-react';
+import { useTransition } from 'react';
 
-import { deletePrompt } from '@/lib/actions';
 import { Button } from '@/components/ui/button';
 import {
   Dialog,
@@ -14,6 +12,9 @@ import {
   DialogHeader,
   DialogTitle,
 } from '@/components/ui/dialog';
+import { deletePrompt } from '@/lib/actions';
+
+import type { Prisma } from '@prisma/client';
 
 // 定义包含关联数据的类型
 type PromptWithTags = Prisma.PromptGetPayload<{

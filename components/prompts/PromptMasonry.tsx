@@ -1,8 +1,9 @@
 'use client';
 
+import { PromptCard } from '@/components/prompts/PromptCard';
+
 import type { Prisma } from '@prisma/client';
 
-import { PromptCard } from '@/components/prompts/PromptCard';
 
 // 定义包含关联数据的类型
 type PromptWithTags = Prisma.PromptGetPayload<{

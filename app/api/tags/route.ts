@@ -1,8 +1,9 @@
 import { NextResponse, type NextRequest } from 'next/server';
-import type { Prisma } from '@prisma/client';
 import { getToken } from 'next-auth/jwt';
 
 import prisma from '@/lib/prisma';
+
+import type { Prisma } from '@prisma/client';
 
 export async function GET(request: NextRequest) {
   try {

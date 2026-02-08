@@ -1,5 +1,5 @@
-import prisma from '@/lib/prisma';
 import { NewPromptForm } from '@/components/forms/NewPromptForm';
+import prisma from '@/lib/prisma';
 
 export default async function NewPromptPage() {
   const tags = await prisma.tag.findMany({

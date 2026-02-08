@@ -1,14 +1,12 @@
 'use client';
 
-import { useTransition } from 'react';
 import { zodResolver } from '@hookform/resolvers/zod';
-import type { Prisma } from '@prisma/client';
 import { Info } from 'lucide-react';
+import { useTransition } from 'react';
 import { useForm } from 'react-hook-form';
-import type { z } from 'zod';
 
-import { updatePrompt } from '@/lib/actions';
-import { NewPromptSchema } from '@/lib/schema';
+
+import { TagMultiSelect } from '@/components/shared/TagMultiSelect';
 import { Button } from '@/components/ui/button';
 import {
   Dialog,
@@ -21,7 +19,11 @@ import {
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
-import { TagMultiSelect } from '@/components/shared/TagMultiSelect';
+import { updatePrompt } from '@/lib/actions';
+import { NewPromptSchema } from '@/lib/schema';
+
+import type { Prisma } from '@prisma/client';
+import type { z } from 'zod';
 
 // 定义包含关联数据的类型
 type PromptWithTags = Prisma.PromptGetPayload<{

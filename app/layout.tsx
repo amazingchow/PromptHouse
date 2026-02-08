@@ -1,10 +1,11 @@
 import '@/app/globals.css';
 
-import type { Metadata } from 'next';
 import { headers } from 'next/headers';
 
-import Header from '@/components/shared/Header';
 import { Providers } from '@/app/providers';
+import Header from '@/components/shared/Header';
+
+import type { Metadata } from 'next';
 
 export const metadata: Metadata = {
   title: 'PromptHouse',

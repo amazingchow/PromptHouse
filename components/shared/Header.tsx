@@ -1,9 +1,9 @@
 'use client';
 
-import { useState } from 'react';
-import Link from 'next/link';
 import { BarChart, FilePlus, LogOut, Tag, User } from 'lucide-react';
+import Link from 'next/link';
 import { signOut, useSession } from 'next-auth/react';
+import { useState } from 'react';
 
 export default function Header() {
   const { data: session } = useSession();
