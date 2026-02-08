@@ -17,7 +17,7 @@ PromptHouse 是一个专为 AI 提示词管理而设计的现代化 Web 应用�
 
 ### 前置要求
 
-- Node.js 18+ 
+- Node.js 18+
 - PostgreSQL 数据库
 - Docker (可选，用于本地数据库)
 
@@ -37,12 +37,13 @@ PromptHouse 是一个专为 AI 提示词管理而设计的现代化 Web 应用�
    ```
 
 3. **环境配置**
-   
+
    复制环境变量文件：
+
    ```bash
    cp env.example .env
    ```
-   
+
    编辑 `.env` 文件，配置数据库连接
 
 4. **启动数据库**
@@ -115,6 +116,7 @@ PromptHouse 是一个专为 AI 提示词管理而设计的现代化 Web 应用�
 ```
 
 类型包括：
+
 - `feat`: 新功能
 - `fix`: 修复
 - `docs`: 文档更新

@@ -46,8 +46,9 @@ Prisma 的最大优势是 **类型安全**。它会根据你的数据模型自�
     ```bash
     npx prisma init
     ```
-    
+
     现在你的项目结构看起来像这样：
+
     ```
     .
     ├── node_modules/
@@ -106,6 +107,7 @@ Prisma 的最大优势是 **类型安全**。它会根据你的数据模型自�
       createdAt DateTime @default(now())
     }
     ```
+
     - `@id`: 定义主键。
     - `@default()`: 设置默认值。
     - `@unique`: 设置唯一约束。
@@ -121,6 +123,7 @@ npx prisma migrate dev --name init
 ```
 
 这个命令会做几件事：
+
 1.  在 `prisma/migrations` 文件夹下创建一个新的迁移目录。
 2.  生成 SQL 迁移文件（你可以查看它来了解具体会执行什么 SQL 语句）。
 3.  将迁移应用到你的数据库，创建 `User` 和 `Post` 表。
@@ -195,10 +198,10 @@ npx prisma migrate dev --name init
         where: { id: newPost.id },
       });
       console.log(specificPost);
-      
+
       console.log('\n--- 筛选已发布的文章 ---');
       const publishedPosts = await prisma.post.findMany({
-          where: { published: true }
+        where: { published: true },
       });
       console.log(publishedPosts);
 
@@ -211,13 +214,13 @@ npx prisma migrate dev --name init
         data: { name: 'Alice Smith' },
       });
       console.log('更新后的用户:', updatedUser);
-      
+
       // ===================================================
       // 4. 删除 (Delete)
       // ===================================================
       console.log('\n--- 删除文章 ---');
       const deletedPost = await prisma.post.delete({
-          where: { id: newPost.id }
+        where: { id: newPost.id },
       });
       console.log('已删除的文章:', deletedPost);
 
@@ -251,45 +254,45 @@ npx prisma migrate dev --name init
 
 ### 更多高级用法
 
--   **筛选、排序和分页**:
+- **筛选、排序和分页**:
 
-    ```typescript
-    const result = await prisma.post.findMany({
-      where: {
-        published: true,
-        title: {
-          contains: 'Prisma', // 标题包含 "Prisma"
-        },
+  ```typescript
+  const result = await prisma.post.findMany({
+    where: {
+      published: true,
+      title: {
+        contains: 'Prisma', // 标题包含 "Prisma"
       },
-      orderBy: {
-        createdAt: 'desc', // 按创建时间降序
-      },
-      skip: 10, // 跳过前10条
-      take: 5,  // 取5条
-    });
-    ```
+    },
+    orderBy: {
+      createdAt: 'desc', // 按创建时间降序
+    },
+    skip: 10, // 跳过前10条
+    take: 5, // 取5条
+  });
+  ```
 
--   **事务（Transactions）**:
+- **事务（Transactions）**:
 
-    使用 `prisma.$transaction` 来确保一组操作要么全部成功，要么全部失败。
-    ```typescript
-    const [user, post] = await prisma.$transaction([
-      prisma.user.create({ data: { name: 'Bob', email: 'bob@prisma.io' } }),
-      prisma.post.create({ data: { title: 'Hello Bob' } }) // 这里会失败，因为缺少 authorId
-    ]);
-    // 因为第二个操作失败，第一个创建用户的操作也会被回滚。
-    ```
+  使用 `prisma.$transaction` 来确保一组操作要么全部成功，要么全部失败。
 
--   **原生 SQL 查询**:
+  ```typescript
+  const [user, post] = await prisma.$transaction([
+    prisma.user.create({ data: { name: 'Bob', email: 'bob@prisma.io' } }),
+    prisma.post.create({ data: { title: 'Hello Bob' } }), // 这里会失败，因为缺少 authorId
+  ]);
+  // 因为第二个操作失败，第一个创建用户的操作也会被回滚。
+  ```
 
-    当你需要执行 Prisma Client 不支持的复杂查询时，可以使用原生 SQL。
-    ```typescript
-    import { Prisma } from '@prisma/client';
+- **原生 SQL 查询**:
 
-    const result = await prisma.$queryRaw(
-      Prisma.sql`SELECT * FROM "User" WHERE name = ${'Alice'}`
-    );
-    ```
+  当你需要执行 Prisma Client 不支持的复杂查询时，可以使用原生 SQL。
+
+  ```typescript
+  import { Prisma } from '@prisma/client';
+
+  const result = await prisma.$queryRaw(Prisma.sql`SELECT * FROM "User" WHERE name = ${'Alice'}`);
+  ```
 
 ### 总结
 

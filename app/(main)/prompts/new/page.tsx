@@ -1,16 +1,16 @@
-import { NewPromptForm } from '@/components/forms/NewPromptForm';
 import prisma from '@/lib/prisma';
+import { NewPromptForm } from '@/components/forms/NewPromptForm';
 
 export default async function NewPromptPage() {
-    const tags = await prisma.tag.findMany({
-        select: { id: true, name: true },
-        orderBy: { name: 'asc' },
-    });
+  const tags = await prisma.tag.findMany({
+    select: { id: true, name: true },
+    orderBy: { name: 'asc' },
+  });
 
-    return (
-        <div className="container py-8 max-w-4xl mx-auto">
-            <h1 className="text-3xl font-bold mb-6">创建提示词</h1>
-            <NewPromptForm availableTags={tags} />
-        </div>
-    );
+  return (
+    <div className="container mx-auto max-w-4xl py-8">
+      <h1 className="mb-6 text-3xl font-bold">创建提示词</h1>
+      <NewPromptForm availableTags={tags} />
+    </div>
+  );
 }

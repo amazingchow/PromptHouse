@@ -1,5 +1,5 @@
-@import "tailwindcss";
-@import "tw-animate-css";
+@import 'tailwindcss';
+@import 'tw-animate-css';
 
 @custom-variant dark (&:is(.dark *));
 
@@ -45,9 +45,9 @@
 
 :root {
   --radius: 0.65rem;
-  --background: #FAF9F4;
+  --background: #faf9f4;
   --foreground: oklch(0.145 0 0);
-  --card: #FAFBF9;
+  --card: #fafbf9;
   --card-foreground: oklch(0.145 0 0);
   --popover: oklch(1 0 0);
   --popover-foreground: oklch(0.145 0 0);

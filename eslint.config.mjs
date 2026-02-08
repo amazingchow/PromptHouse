@@ -27,21 +27,13 @@ const eslintConfig = [
           disallowTypeAnnotations: false,
         },
       ],
-      "import/order": [
-        "error",
+      'import/order': [
+        'error',
         {
-          groups: [
-            "builtin",
-            "external",
-            "internal",
-            ["parent", "sibling"],
-            "index",
-            "object",
-            "type",
-          ],
-          "newlines-between": "always",
+          groups: ['builtin', 'external', 'internal', ['parent', 'sibling'], 'index', 'object', 'type'],
+          'newlines-between': 'always',
           alphabetize: {
-            order: "asc",
+            order: 'asc',
             caseInsensitive: true,
           },
         },
