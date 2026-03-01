@@ -24,8 +24,8 @@
 
 ### 前置要求
 
-- Node.js 18+
-- PostgreSQL 数据库
+- Node.js >= 24.14.0
+- PostgreSQL >=14.2
 - Docker (可选，用于本地数据库)
 
 ### 本地开发
