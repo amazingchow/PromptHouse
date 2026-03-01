@@ -1,8 +1,13 @@
-# PromptHouse
+<div align="center">
+    <img alt="PromptHouse List Prompts" src="./assets/list-prompts.png" width="80%">
+    <img alt="PromptHouse New Prompt" src="./assets/new-prompt.png" width="80%">
+</div>
 
-> 一个现代化的提示词资产管理平台
+<p align="center">
+    <em>PromptHouse - 一个现代化的提示词资产管理平台，它提供了直观的界面来创建、组织和分享提示词，帮助用户更好地管理和利用他们的 AI 提示词资产。</em>
+</p>
 
-PromptHouse 是一个专为 AI 提示词管理而设计的现代化 Web 应用。它提供了直观的界面来创建、组织和分享提示词，帮助用户更好地管理和利用他们的 AI 提示词资产。
+---
 
 ## ✨ 特性
 
@@ -12,6 +17,8 @@ PromptHouse 是一个专为 AI 提示词管理而设计的现代化 Web 应用�
 - 🎨 **现代化 UI**: 基于 Radix UI 和 Tailwind CSS 的美观界面
 - ⚡ **高性能**: 使用 Next.js 15 和 Turbopack 构建
 - 🗄️ **数据持久化**: 使用 PostgreSQL 数据库存储数据
+
+---
 
 ## 🚀 快速开始
 
@@ -86,56 +93,11 @@ PromptHouse 是一个专为 AI 提示词管理而设计的现代化 Web 应用�
    npm start
    ```
 
-## 🤝 贡献指南
-
-我们欢迎所有形式的贡献！请查看以下指南：
-
-### 开发流程
-
-1. Fork 项目
-2. 创建功能分支 (`git checkout -b feature/AmazingFeature`)
-3. 提交更改 (`git commit -m 'Add some AmazingFeature'`)
-4. 推送到分支 (`git push origin feature/AmazingFeature`)
-5. 开启 Pull Request
-
-### 代码规范
-
-- 使用 TypeScript 进行类型安全开发
-- 遵循 ESLint 配置
-- 使用 Prettier 格式化代码
-- 编写清晰的提交信息
-
-### 提交信息格式
-
-```
-<type>(<scope>): <subject>
-
-<body>
-
-<footer>
-```
-
-类型包括：
-
-- `feat`: 新功能
-- `fix`: 修复
-- `docs`: 文档更新
-- `style`: 代码格式调整
-- `refactor`: 重构
-- `test`: 测试相关
-- `chore`: 构建过程或辅助工具的变动
+---
 
 ## 📝 许可证
 
 本项目采用 [MIT 许可证](LICENSE) - 查看 [LICENSE](LICENSE) 文件了解详情。
-
-## 🙏 致谢
-
-- [Next.js](https://nextjs.org/) - React 框架
-- [Radix UI](https://www.radix-ui.com/) - 无样式组件库
-- [Tailwind CSS](https://tailwindcss.com/) - CSS 框架
-- [Prisma](https://www.prisma.io/) - 数据库 ORM
-- [Lucide React](https://lucide.dev/) - 图标库
 
 ---
 

@@ -1,9 +1,12 @@
-FROM node:20-alpine AS base
+FROM node:24.14.0-alpine3.23 AS base
 
 # Install dependencies only when needed
 FROM base AS deps
 # Check https://github.com/nodejs/docker-node/tree/b4117f9333da4138b03a546ec926ef50a31506c3#nodealpine to understand why libc6-compat might be needed.
-RUN apk add --no-cache libc6-compat
+RUN apk update && \
+    apk upgrade --no-cache --available && \
+    apk add --no-cache libc6-compat && \
+    rm -rf /var/cache/apk/* /tmp/* /var/tmp/*
 WORKDIR /app
 # Install dependencies based on the preferred package manager
 COPY package.json package-lock.json* ./
